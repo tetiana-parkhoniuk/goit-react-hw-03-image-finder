@@ -16,6 +16,9 @@ export default class App extends Component {
 
   async componentDidUpdate(_, prevState) {
     if (prevState.searchQuery !== this.state.searchQuery) {
+      this.setState({ images: [] });
+      this.resetPage();
+
       try {
         const images = await fetchImages(
           this.state.searchQuery,
@@ -25,7 +28,6 @@ export default class App extends Component {
       } catch (error) {
         alert('Error');
       }
-      this.resetPage();
     }
 
     if (prevState.page !== this.state.page) {
