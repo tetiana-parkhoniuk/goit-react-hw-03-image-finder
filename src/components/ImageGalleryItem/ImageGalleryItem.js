@@ -3,7 +3,7 @@ import styles from './ImageGalleryItem.module.css';
 
 export default function ImageGalleryItem({ id, webformatURL, tags }) {
   return (
-    <li key={id} className={styles.imageGalleryItem}>
+    <li className={styles.imageGalleryItem}>
       <img
         src={webformatURL}
         alt={tags}
@@ -14,7 +14,7 @@ export default function ImageGalleryItem({ id, webformatURL, tags }) {
 }
 
 ImageGalleryItem.propTypes = {
-  id: PropTypes.number.isRequired,
+  // id: PropTypes.number.isRequired,
   webformatURL: PropTypes.string.isRequired,
   tags: PropTypes.string.isRequired,
 };

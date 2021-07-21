@@ -9,21 +9,49 @@ export default class App extends Component {
   state = {
     searchQuery: null,
     images: [],
+    page: 1,
     reqStatus: '',
     // idle, pending, fulfilled, rejected
   };
 
   async componentDidUpdate(_, prevState) {
     if (prevState.searchQuery !== this.state.searchQuery) {
-      console.log('fetch');
-      const images = await fetchImages(this.state.searchQuery);
-      this.setState({ images });
-      // if(images.length < 1){ do not show load more button 46:45}
+      try {
+        const images = await fetchImages(
+          this.state.searchQuery,
+          this.state.page,
+        );
+        this.setState({ images });
+      } catch (error) {
+        alert('Error');
+      }
+      this.resetPage();
+    }
+
+    if (prevState.page !== this.state.page) {
+      const images = await fetchImages(this.state.searchQuery, this.state.page);
+      this.setState({ images: [...this.state.images, ...images] });
+      this.scrollOnLoadMore();
     }
   }
 
   handleFormSubmit = searchQuery => {
     this.setState({ searchQuery });
+  };
+
+  incrementPage = () => {
+    this.setState({ page: this.state.page + 1 });
+  };
+
+  resetPage = () => {
+    this.setState({ page: 1 });
+  };
+
+  scrollOnLoadMore = () => {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: 'smooth',
+    });
   };
 
   render() {
@@ -33,7 +61,7 @@ export default class App extends Component {
       <div className={styles.app}>
         <Searchbar onSubmit={this.handleFormSubmit} />
         <ImageGallery images={this.state.images} />
-        {showLoadMoreBtn && <Button onClick={'fetch'} />}
+        {showLoadMoreBtn && <Button onClick={this.incrementPage} />}
       </div>
     );
   }

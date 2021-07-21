@@ -7,7 +7,8 @@ export default function ImageGallery({ images }) {
     <ul className={styles.imageGallery}>
       {images.map(image => (
         <ImageGalleryItem
-          id={image.id}
+          key={image.id}
+          // id={image.id}
           webformatURL={image.webformatURL}
           tags={image.tags}
         />
