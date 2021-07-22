@@ -5,7 +5,7 @@ export default function Spinner() {
   return (
     <div className={styles.spinner}>
       <Loader
-        type="Circles"
+        type="ThreeDots"
         color="#d3d8e8"
         height={100}
         width={100}

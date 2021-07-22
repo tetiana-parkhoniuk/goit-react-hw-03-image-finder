@@ -83,10 +83,9 @@ export default class App extends Component {
     return (
       <div className={styles.app}>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        {isLoading && <Spinner />}
         {<ImageGallery images={this.state.images} />}
+        {isLoading && <Spinner />}
         {showLoadMoreBtn && <Button onClick={this.incrementPage} />}
-        {/* { isLoading && !showLoadMoreBtn && <Spinner/>} */}
       </div>
     );
   }
