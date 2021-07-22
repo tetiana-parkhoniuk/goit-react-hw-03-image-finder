@@ -3,6 +3,7 @@ import Searchbar from 'components/Searchbar';
 import ImageGallery from 'components/ImageGallery ';
 import Button from 'components/Button';
 import Spinner from 'components/Spinner';
+import Modal from 'components/Modal';
 import { fetchImages } from 'services/api';
 import styles from './App.module.css';
 
@@ -13,6 +14,7 @@ export default class App extends Component {
     page: 1,
     reqStatus: '',
     // idle, pending, fulfilled, rejected
+    showModal: false,
   };
 
   async componentDidUpdate(_, prevState) {
@@ -75,8 +77,14 @@ export default class App extends Component {
     });
   };
 
+  toggleModal = () => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+    }));
+  };
+
   render() {
-    const { images, reqStatus } = this.state;
+    const { images, reqStatus, showModal } = this.state;
     const isLoading = reqStatus === 'pending';
     const showLoadMoreBtn = images.length > 0;
 
@@ -86,6 +94,11 @@ export default class App extends Component {
         {<ImageGallery images={this.state.images} />}
         {isLoading && <Spinner />}
         {showLoadMoreBtn && <Button onClick={this.incrementPage} />}
+        {showModal && (
+          <Modal>
+            <h1>test</h1>
+          </Modal>
+        )}
       </div>
     );
   }
