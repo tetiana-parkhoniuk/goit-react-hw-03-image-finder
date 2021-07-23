@@ -12,29 +12,12 @@ export default class App extends Component {
     searchQuery: null,
     images: [],
     page: 1,
-    reqStatus: '',
-    // idle, pending, fulfilled, rejected
+    reqStatus: 'idle',
     showModal: false,
   };
 
-  async componentDidUpdate(_, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     if (prevState.searchQuery !== this.state.searchQuery) {
-      try {
-        this.setState({ images: [], reqStatus: 'pending' });
-        this.resetPage();
-
-        const images = await fetchImages(
-          this.state.searchQuery,
-          this.state.page,
-        );
-        this.setState({ images, reqStatus: 'fulfilled' });
-      } catch (error) {
-        this.setState({ reqStatus: 'rejected' });
-        alert('Error');
-      }
-    }
-
-    if (prevState.page !== this.state.page) {
       try {
         this.setState({ reqStatus: 'pending' });
 
@@ -42,6 +25,21 @@ export default class App extends Component {
           this.state.searchQuery,
           this.state.page,
         );
+
+        this.setState({ images, reqStatus: 'fulfilled' });
+      } catch (error) {
+        this.setState({ reqStatus: 'rejected' });
+        alert('Error');
+      }
+    } else if (prevState.page !== this.state.page) {
+      try {
+        this.setState({ reqStatus: 'pending' });
+
+        const images = await fetchImages(
+          this.state.searchQuery,
+          this.state.page,
+        );
+
         this.setState({
           images: [...this.state.images, ...images],
           reqStatus: 'fulfilled',
@@ -51,23 +49,15 @@ export default class App extends Component {
         this.setState({ reqStatus: 'rejected' });
         alert('Error');
       }
-
-      // const images = await fetchImages(this.state.searchQuery, this.state.page);
-      // this.setState({ images: [...this.state.images, ...images] });
-      // this.scrollOnLoadMore();
     }
   }
 
   handleFormSubmit = searchQuery => {
-    this.setState({ searchQuery });
+    this.setState({ searchQuery, page: 1, images: [] });
   };
 
   incrementPage = () => {
     this.setState({ page: this.state.page + 1 });
-  };
-
-  resetPage = () => {
-    this.setState({ page: 1 });
   };
 
   scrollOnLoadMore = () => {
