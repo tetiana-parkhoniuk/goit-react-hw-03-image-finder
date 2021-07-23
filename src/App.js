@@ -13,7 +13,7 @@ export default class App extends Component {
     images: [],
     page: 1,
     reqStatus: 'idle',
-    showModal: false,
+    selectedImage: null,
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -68,26 +68,32 @@ export default class App extends Component {
   };
 
   toggleModal = () => {
-    this.setState(({ showModal }) => ({
-      showModal: !showModal,
+    this.setState(({ selectedImage }) => ({
+      selectedImage: !selectedImage,
     }));
   };
 
+  handleSelectedImage = imageURL => {
+    this.setState({ selectedImage: imageURL });
+  };
+
   render() {
-    const { images, reqStatus, showModal } = this.state;
+    const { images, reqStatus, selectedImage } = this.state;
     const isLoading = reqStatus === 'pending';
     const showLoadMoreBtn = images.length > 0;
 
     return (
       <div className={styles.app}>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        {<ImageGallery images={this.state.images} />}
+
+        {<ImageGallery images={images} onSelect={this.handleSelectedImage} />}
+
         {isLoading && <Spinner />}
+
         {showLoadMoreBtn && <Button onClick={this.incrementPage} />}
-        {showModal && (
-          <Modal>
-            <h1>test</h1>
-          </Modal>
+
+        {selectedImage && (
+          <Modal onClose={this.toggleModal} largeImageURL={selectedImage} />
         )}
       </div>
     );
