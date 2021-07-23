@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 import Searchbar from 'components/Searchbar';
 import ImageGallery from 'components/ImageGallery ';
 import Button from 'components/Button';
@@ -29,7 +30,7 @@ export default class App extends Component {
         this.setState({ images, reqStatus: 'fulfilled' });
       } catch (error) {
         this.setState({ reqStatus: 'rejected' });
-        alert('Error');
+        toast.error('Something went worng, please try again later.');
       }
     } else if (prevState.page !== this.state.page) {
       try {
@@ -47,7 +48,7 @@ export default class App extends Component {
         this.scrollOnLoadMore();
       } catch (error) {
         this.setState({ reqStatus: 'rejected' });
-        alert('Error');
+        toast.error('Something went worng, please try again later.');
       }
     }
   }
@@ -84,6 +85,8 @@ export default class App extends Component {
 
     return (
       <div className={styles.app}>
+        <Toaster position="top-right" toastOptions={{ duration: 2000 }} />
+
         <Searchbar onSubmit={this.handleFormSubmit} />
 
         {<ImageGallery images={images} onSelect={this.handleSelectedImage} />}
